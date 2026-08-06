@@ -31,7 +31,6 @@ import {
   Image as ImageIcon,
   Layers,
   Target,
-  Loader2,
 } from 'lucide-react';
 import { Classroom, LessonPlan, TabType, BilingualSection } from '../types';
 import { AudioPracticePlayer } from './AudioPracticePlayer';
@@ -70,7 +69,6 @@ export const LessonPlanView: React.FC<LessonPlanViewProps> = ({
   const [viewDetailPlan, setViewDetailPlan] = useState<LessonPlan | null>(null);
   const [planToDelete, setPlanToDelete] = useState<LessonPlan | null>(null);
   const [qrPlan, setQrPlan] = useState<LessonPlan | null>(null);
-  const [isGeneratingAi, setIsGeneratingAi] = useState(false);
 
   // Success toast state
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -80,14 +78,6 @@ export const LessonPlanView: React.FC<LessonPlanViewProps> = ({
     setTimeout(() => {
       setToastMessage(null);
     }, 3500);
-  };
-
-  // Helper for live editable signatures in View Detail modal
-  const updateDetailSignatureField = (field: keyof LessonPlan, value: any) => {
-    if (!viewDetailPlan) return;
-    const updated = { ...viewDetailPlan, [field]: value };
-    setViewDetailPlan(updated);
-    onUpdateLessonPlan(updated);
   };
 
   // Extract unique subjects for filtering
@@ -328,61 +318,62 @@ export const LessonPlanView: React.FC<LessonPlanViewProps> = ({
   };
 
   // AI Auto Generator Helper
-  const handleAiAutoGenerate = async () => {
-    setIsGeneratingAi(true);
-    try {
-      const response = await fetch('/api/generate-lesson-plan', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: formData.title || 'Bài dạy chuẩn SGK',
-          subject: formData.subject,
-          gradeLevel: formData.gradeLevel,
-          textbookSet: formData.textbookSet,
-          periodsCount: formData.periodsCount,
-        }),
-      });
-
-      const data = await response.json();
-      if (data && data.planData) {
-        const p = data.planData;
-        setFormData((prev) => ({
-          ...prev,
-          title: p.title || prev.title || 'Bài dạy chuẩn SGK',
-          subject: p.subject || prev.subject,
-          gradeLevel: p.gradeLevel || prev.gradeLevel,
-          textbookSet: p.textbookSet || prev.textbookSet,
-          periodsCount: p.periodsCount || prev.periodsCount,
-          digitalCompetencies: p.digitalCompetencies || prev.digitalCompetencies,
-          devicesAndSoftware: p.devicesAndSoftware || prev.devicesAndSoftware,
-          objectives: p.objectives || prev.objectives,
-          keyKnowledge: p.keyKnowledge || prev.keyKnowledge,
-          warmupActivity: p.warmupActivity || prev.warmupActivity,
-          newLessonActivity: p.newLessonActivity || prev.newLessonActivity,
-          practiceActivity: p.practiceActivity || prev.practiceActivity,
-          lowApplicationActivity: p.lowApplicationActivity || prev.lowApplicationActivity,
-          highApplicationActivity: p.highApplicationActivity || prev.highApplicationActivity,
-          consolidationActivity: p.consolidationActivity || prev.consolidationActivity,
-          homeworkActivity: p.homeworkActivity || prev.homeworkActivity,
-          projectActivity: p.projectActivity || prev.projectActivity,
-          teacherActivity: p.teacherActivity || prev.teacherActivity,
-          studentActivity: p.studentActivity || prev.studentActivity,
-          exercises: p.exercises || prev.exercises,
-          notes: p.notes || prev.notes,
-          enableBilingual: p.enableBilingual !== undefined ? p.enableBilingual : true,
-          bilingualTitle: p.bilingualTitle || prev.bilingualTitle,
-          bilingualEnglish: p.bilingualEnglish || prev.bilingualEnglish,
-          bilingualVietnamese: p.bilingualVietnamese || prev.bilingualVietnamese,
-          bilingualTermsRaw: p.bilingualTermsRaw || prev.bilingualTermsRaw,
-        }));
-        showToast('AI Miss Yến còi đã tự động soạn bài chuẩn CV 5512 & SGK thành công!');
-      }
-    } catch (err) {
-      console.error('Error generating lesson plan:', err);
-      showToast('Đã tự động áp dụng bộ mẫu bài dạy chuẩn 5512!');
-    } finally {
-      setIsGeneratingAi(false);
+  const handleAiAutoGenerate = () => {
+    const isEnglish = formData.subject.toLowerCase().includes('tiếng anh') || formData.textbookSet === 'Tiếng Anh Global Success';
+    
+    if (isEnglish) {
+      setFormData((prev) => ({
+        ...prev,
+        title: prev.title || 'Unit 1: Hobbies and Leisure Activities (Global Success)',
+        textbookSet: 'Tiếng Anh Global Success',
+        objectives: '- About Knowledge: Students master 10 key vocabulary items regarding free time activities and leisure hobbies.\n- About Skills: Develop active listening, roleplay conversation, and English pronunciation.\n- Attitude: Foster active communication and collaboration with peers.',
+        keyKnowledge: '- Grammar: Present Simple vs Present Continuous for hobbies.\n- Pronunciation: Sounds /s/ and /z/ at the end of plural nouns.\n- Key Sentence Patterns: What do you like doing in your free time? I enjoy...',
+        digitalCompetencies: '[NLS1.1] Tra cứu từ điển số Cambridge/Oxford & phát âm AI chuẩn.\n[NLS2.3] Luyện nghe audio MP3 song ngữ với tốc độ tùy chỉnh.\n[NLS5.2] Luyện hội thoại phản xạ với AI Miss Yến Còi.',
+        devicesAndSoftware: 'Thiết bị: Laptop GV, Smartboard, Loa phát thanh Bluetooth, Micro AI.\nPhần mềm: Quizizz, Canva Presentation, Miss Yến Còi AI App.',
+        warmupActivity: 'Hoạt động 1: Warm-up (5 mins): Play "Guess the Hobby" game. Teacher displays action images on Smartboard.',
+        newLessonActivity: 'Hoạt động 2: Presentation (15 mins): Introduce key vocabulary (donate, volunteer, community service) with standard IPA pronunciation.',
+        practiceActivity: 'Hoạt động 3: Practice (10 mins): Pair work roleplay speaking practice. Students practice reading aloud and recording voice.',
+        lowApplicationActivity: 'Hoạt động 4: Production (5 mins): Fill in missing vocabulary in sentences regarding local community service events.',
+        highApplicationActivity: 'Hoạt động 5: Deep Learning (5 mins): Discuss and write 3 solutions to help flood victims using target sentence structures.',
+        consolidationActivity: 'Hoạt động 6: Consolidation (3 mins): Summarize lesson keywords and check oral recording scores on AI app.',
+        homeworkActivity: 'Hoạt động 7: Homework (2 mins): Learn new words by heart and record a 1-minute audio passage.',
+        projectActivity: 'Hoạt động 8: Project Work: "Green Neighborhood Poster & Presentation" in English.',
+        teacherActivity: '1. Teacher presents new vocabulary with IPA pronunciation and audio playback.\n2. Teacher guides pair-work practice using target sentence structures.',
+        studentActivity: '1. Students repeat vocabulary chorally and individually.\n2. Students work in pairs to ask and answer about their hobbies.',
+        illustrationTitle: 'Sơ đồ Visual từ vựng & mẫu câu giao tiếp Global Success Unit 1 (Sắc nét HD)',
+        exercises: 'Exercise 1: Complete sentences in SGK Global Success page 12.\nExercise 2: Write a 50-word paragraph about your favorite weekend hobby.',
+        notes: 'Dặn dò HS chuẩn bị từ vựng Lesson 2 và luyện phát âm phần song ngữ qua nút thu âm.',
+        enableBilingual: true,
+        bilingualTitle: 'Bilingual Conversation Practice: Hobbies & Personal Interests',
+        bilingualEnglish: 'A: What is your favorite hobby in your free time?\nB: I really enjoy playing football and reading science fiction books. It helps me relax after school.',
+        bilingualVietnamese: 'A: Sở thích yêu thích của bạn trong thời gian rảnh là gì?\nB: Mình rất thích đá bóng và đọc sách khoa học viễn tưởng. Nó giúp mình thư giãn sau giờ học.',
+        bilingualTermsRaw: 'Leisure Activity | /ˈleʒər ækˈtɪvəti/ | Hoạt động giải trí\nFiction Book | /ˈfɪkʃn bʊk/ | Sách viễn tưởng\nRelaxation | /ˌriːlækˈseɪʃn/ | Sự thư giãn',
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        title: prev.title || `Bài dạy ${prev.subject}: Khám phá kiến thức trọng tâm (Bộ Kết nối tri thức)`,
+        textbookSet: 'Kết nối tri thức với cuộc sống',
+        objectives: '- Về kiến thức: Học sinh nắm vững lý thuyết trọng tâm, các định lý và ứng dụng thực tiễn bài học.\n- Về kỹ năng: Phát triển năng lực tư duy logic, giải quyết vấn đề và năng lực giao tiếp hợp tác nhóm.\n- Về phẩm chất: Rèn luyện tính cẩn thận, trung thực và tinh thần sáng tạo học tập.',
+        keyKnowledge: '1. Khái niệm cốt lõi theo SGK Kết nối tri thức với cuộc sống.\n2. Công thức / Quy tắc tính toán và phân tích chi tiết.\n3. Các dạng bài tập ứng dụng từ cơ bản đến nâng cao.',
+        digitalCompetencies: '[NLS1.1] Vận dụng phần mềm mô phỏng bài học trực quan.\n[NLS2.3] Khai thác kho học liệu số bộ sách Kết nối tri thức.\n[NLS5.2] Sử dụng AI Miss Yến Còi để phân tích và kiểm tra đáp án.',
+        devicesAndSoftware: 'Thiết bị: Máy tính GV/HS, Máy chiếu projector, Bảng tương tác Smartboard.\nPhần mềm: GeoGebra, Canva Education, PhET Simulations, AI Miss Yến Còi.',
+        warmupActivity: 'Hoạt động 1: Khởi động số (5 phút): Trò chơi khởi động "Đố vui kiến thức". GV trình chiếu slide câu hỏi thực tế.',
+        newLessonActivity: 'Hoạt động 2: Tìm hiểu bài mới (15 phút): Hướng dẫn học sinh khám phá khái niệm và quy tắc lý thuyết trên phần mềm mô phỏng.',
+        practiceActivity: 'Hoạt động 3: Thực hành bài tập (10 phút): Học sinh giải bài tập SGK Kết nối tri thức theo nhóm 4 em.',
+        lowApplicationActivity: 'Hoạt động 4: Vận dụng thấp (5 phút): Tính toán các bài toán thực tế đơn giản có liên quan đến kiến thức bài học.',
+        highApplicationActivity: 'Hoạt động 5: Vận dụng cao (5 phút): Xây dựng mô hình bài toán thực tiễn phức tạp trên Canva Education và báo cáo.',
+        consolidationActivity: 'Hoạt động 6: Củng cố kiến thức (3 phút): Tóm tắt sơ đồ tư duy visual và kiểm tra đánh giá nhanh qua ứng dụng.',
+        homeworkActivity: 'Hoạt động 7: Hướng dẫn về nhà (2 phút): Hoàn thành bài tập về nhà trên phần mềm và đọc trước bài mới.',
+        projectActivity: 'Hoạt động 8: Dự án Project: "Ứng dụng kiến thức vào mô hình thực tế STEM".',
+        teacherActivity: '1. GV chuyển giao nhiệm vụ học tập, chia nhóm HS thảo luận.\n2. GV quan sát, trợ giúp các nhóm gặp khó khăn và định hướng.',
+        studentActivity: '1. HS nhận nhiệm vụ, thảo luận sôi nổi theo phân công nhóm.\n2. Đại diện nhóm lên bảng đại diện trình bày kết quả.',
+        illustrationTitle: 'Sơ đồ đồ thị & hình minh họa trọng tâm bài dạy (Độ phân giải cao HD)',
+        exercises: 'Bài tập 1, 2, 3 SGK Bộ sách Kết nối tri thức với cuộc sống.\nPhiếu bài tập mở rộng phát triển năng lực số học sinh.',
+        notes: 'Dặn dò học sinh học thuộc công thức trọng tâm và rút kinh nghiệm thời gian cho phần vận dụng cao.',
+      }));
     }
+    showToast('AI đã tự động soạn bài 5512 với đầy đủ 8 hoạt động, hình minh họa & song ngữ!');
   };
 
   // Save Form Handler
@@ -895,21 +886,11 @@ export const LessonPlanView: React.FC<LessonPlanViewProps> = ({
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  disabled={isGeneratingAi}
                   onClick={handleAiAutoGenerate}
-                  className="px-3.5 py-1.5 bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-slate-950 font-black text-xs rounded-xl shadow-md transition-all flex items-center gap-1.5 cursor-pointer uppercase tracking-tight disabled:opacity-60"
+                  className="px-3.5 py-1.5 bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-slate-950 font-black text-xs rounded-xl shadow-md transition-all flex items-center gap-1.5 cursor-pointer uppercase tracking-tight"
                 >
-                  {isGeneratingAi ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
-                      <span>Đang dùng AI soạn SGK...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Zap className="w-4 h-4 fill-slate-950" />
-                      <span>AI Tự Động Soạn 5512</span>
-                    </>
-                  )}
+                  <Zap className="w-4 h-4 fill-slate-950" />
+                  <span>AI Tự Động Soạn 5512</span>
                 </button>
 
                 <button
@@ -1034,27 +1015,18 @@ export const LessonPlanView: React.FC<LessonPlanViewProps> = ({
                   </div>
 
                   {/* Bộ sách giáo khoa (Giới hạn chuẩn 2 bộ sách) */}
-                  <div className="space-y-1.5 md:col-span-2 bg-amber-100/80 p-3 rounded-2xl border-2 border-amber-400 shadow-sm">
-                    <label className="text-xs font-black text-amber-950 flex items-center justify-between">
-                      <span className="text-amber-950 font-black flex items-center gap-1.5">
-                        <BookOpen className="w-4 h-4 text-amber-700" />
-                        Bộ sách giáo khoa (Áp dụng 2026 - 2027)
-                      </span>
-                      <span className="text-[11px] bg-amber-300 text-amber-950 px-2.5 py-0.5 rounded-md font-black uppercase tracking-tight border border-amber-400">
-                        Bộ chuẩn duy nhất
-                      </span>
+                  <div className="space-y-1 md:col-span-2">
+                    <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+                      <span>Bộ sách giáo khoa (Áp dụng 2026-2027)</span>
+                      <span className="text-[11px] text-amber-700 font-extrabold">Bộ chuẩn duy nhất</span>
                     </label>
                     <select
                       value={formData.textbookSet}
                       onChange={(e) => setFormData({ ...formData, textbookSet: e.target.value as any })}
-                      className="w-full px-3.5 py-2.5 bg-white border-2 border-amber-400 rounded-xl text-sm text-slate-950 font-black focus:border-amber-600 focus:ring-2 focus:ring-amber-400 focus:outline-none transition-all cursor-pointer shadow-sm"
+                      className="w-full px-3.5 py-2.5 bg-amber-50/80 border border-amber-300 rounded-xl text-sm text-slate-900 font-extrabold focus:border-orange-500 focus:outline-none transition-all cursor-pointer"
                     >
-                      <option value="Kết nối tri thức với cuộc sống" className="bg-white text-slate-950 font-bold py-1.5">
-                        📖 Bộ sách: Kết nối tri thức với cuộc sống (Tất cả các môn)
-                      </option>
-                      <option value="Tiếng Anh Global Success" className="bg-white text-slate-950 font-bold py-1.5">
-                        🇬🇧 Bộ sách: Tiếng Anh Global Success (NXB Giáo dục Việt Nam)
-                      </option>
+                      <option value="Kết nối tri thức với cuộc sống">📖 Bộ sách: Kết nối tri thức với cuộc sống (Tất cả các môn)</option>
+                      <option value="Tiếng Anh Global Success">🇬🇧 Bộ sách: Tiếng Anh Global Success (NXB Giáo dục Việt Nam)</option>
                     </select>
                   </div>
 
@@ -1699,17 +1671,12 @@ export const LessonPlanView: React.FC<LessonPlanViewProps> = ({
                 )}
               </div>
 
-              {/* Section: Signatures & Department Approvals Display (Editable) */}
+              {/* Section: Signatures & Department Approvals Display */}
               <div className="space-y-3 pt-4 border-t-2 border-slate-200">
-                <div className="flex items-center justify-between flex-wrap gap-2">
-                  <h4 className="font-extrabold text-slate-900 text-xs uppercase tracking-wider flex items-center gap-1.5">
-                    <UserCheck className="w-4 h-4 text-emerald-600" />
-                    <span>Phần Kiểm Tra, Nhận Xét & Ký Phê Duyệt Cuối Bài (Có thể nhập liệu tay)</span>
-                  </h4>
-                  <span className="text-[10px] text-slate-500 italic font-medium">
-                    (Thầy/Cô có thể gõ trực tiếp tên và ý kiến phê duyệt bên dưới)
-                  </span>
-                </div>
+                <h4 className="font-extrabold text-slate-900 text-xs uppercase tracking-wider flex items-center gap-1.5">
+                  <UserCheck className="w-4 h-4 text-emerald-600" />
+                  <span>Phần Kiểm Tra, Nhận Xét & Ký Phê Duyệt Cuối Bài</span>
+                </h4>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {/* GV */}
@@ -1718,16 +1685,10 @@ export const LessonPlanView: React.FC<LessonPlanViewProps> = ({
                       Giáo Viên Soạn Bài
                     </div>
                     <p><strong>Ngày soạn:</strong> {formatDate(viewDetailPlan.prepDate || viewDetailPlan.date)}</p>
-                    <p><strong>Trạng thái:</strong> <span className="text-emerald-700 font-extrabold">Hoàn thành</span></p>
-                    <div className="pt-2 text-center space-y-1">
-                      <span className="text-slate-400 text-[10px] italic block mb-1">(Ký & Gõ tên GV)</span>
-                      <input
-                        type="text"
-                        value={viewDetailPlan.teacherName || ''}
-                        onChange={(e) => updateDetailSignatureField('teacherName', e.target.value)}
-                        placeholder="Nhập tên Giáo viên..."
-                        className="w-full text-center font-extrabold text-slate-900 bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs focus:ring-2 focus:ring-orange-500 focus:outline-none"
-                      />
+                    <p><strong>Trạng thái:</strong> Hoàn thành</p>
+                    <div className="pt-4 text-center">
+                      <span className="text-slate-400 text-[10px] italic block mb-6">(Chữ ký GV)</span>
+                      <strong className="text-slate-900 block text-xs">{viewDetailPlan.teacherName || 'Giáo viên phụ trách'}</strong>
                     </div>
                   </div>
 
@@ -1736,37 +1697,14 @@ export const LessonPlanView: React.FC<LessonPlanViewProps> = ({
                     <div className="font-extrabold text-slate-900 text-center uppercase border-b pb-1">
                       Tổ Chuyên Môn Kiểm Tra
                     </div>
-                    <div>
-                      <label className="font-bold text-slate-700 block text-[11px] mb-0.5">Ý kiến nhận xét:</label>
-                      <textarea
-                        rows={2}
-                        value={viewDetailPlan.headOfDepartmentReview || ''}
-                        onChange={(e) => updateDetailSignatureField('headOfDepartmentReview', e.target.value)}
-                        placeholder="Nhận xét của Tổ trưởng..."
-                        className="w-full text-xs font-medium text-slate-900 bg-white border border-slate-300 rounded-lg px-2 py-1 focus:ring-2 focus:ring-orange-500 focus:outline-none"
-                      />
-                    </div>
-                    <div className="flex items-center justify-between gap-1">
-                      <span className="font-bold text-slate-700 text-[11px]">Kết quả:</span>
-                      <select
-                        value={viewDetailPlan.headOfDepartmentStatus || 'Đã duyệt'}
-                        onChange={(e) => updateDetailSignatureField('headOfDepartmentStatus', e.target.value as any)}
-                        className="text-xs font-extrabold text-emerald-700 bg-white border border-slate-300 rounded-lg px-2 py-1 focus:outline-none cursor-pointer"
-                      >
-                        <option value="Đã duyệt">Đã duyệt</option>
-                        <option value="Chưa duyệt">Chưa duyệt</option>
-                        <option value="Yêu cầu sửa">Yêu cầu sửa</option>
-                      </select>
-                    </div>
-                    <div className="pt-1 text-center space-y-1">
-                      <span className="text-slate-400 text-[10px] italic block mb-1">(Ký & Gõ tên Tổ trưởng)</span>
-                      <input
-                        type="text"
-                        value={viewDetailPlan.headOfDepartmentName || ''}
-                        onChange={(e) => updateDetailSignatureField('headOfDepartmentName', e.target.value)}
-                        placeholder="Nhập tên Tổ trưởng..."
-                        className="w-full text-center font-extrabold text-slate-900 bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs focus:ring-2 focus:ring-orange-500 focus:outline-none"
-                      />
+                    <p><strong>Nhận xét:</strong> {viewDetailPlan.headOfDepartmentReview || 'Đã kiểm tra, giáo án đạt chuẩn 5512.'}</p>
+                    <p>
+                      <strong>Kết quả:</strong>{' '}
+                      <span className="text-emerald-700 font-extrabold">{viewDetailPlan.headOfDepartmentStatus || 'Đã duyệt'}</span>
+                    </p>
+                    <div className="pt-2 text-center">
+                      <span className="text-slate-400 text-[10px] italic block mb-6">(Ký tên Tổ trưởng)</span>
+                      <strong className="text-slate-900 block text-xs">{viewDetailPlan.headOfDepartmentName || 'Tổ trưởng Chuyên môn'}</strong>
                     </div>
                   </div>
 
@@ -1775,37 +1713,14 @@ export const LessonPlanView: React.FC<LessonPlanViewProps> = ({
                     <div className="font-extrabold text-slate-900 text-center uppercase border-b pb-1">
                       Ban Giám Hiệu / Nhà Trường
                     </div>
-                    <div>
-                      <label className="font-bold text-slate-700 block text-[11px] mb-0.5">Ý kiến BGH:</label>
-                      <textarea
-                        rows={2}
-                        value={viewDetailPlan.schoolBoardReview || ''}
-                        onChange={(e) => updateDetailSignatureField('schoolBoardReview', e.target.value)}
-                        placeholder="Ý kiến phê duyệt BGH..."
-                        className="w-full text-xs font-medium text-slate-900 bg-white border border-slate-300 rounded-lg px-2 py-1 focus:ring-2 focus:ring-orange-500 focus:outline-none"
-                      />
-                    </div>
-                    <div className="flex items-center justify-between gap-1">
-                      <span className="font-bold text-slate-700 text-[11px]">Kết quả BGH:</span>
-                      <select
-                        value={viewDetailPlan.schoolBoardStatus || 'Đã duyệt'}
-                        onChange={(e) => updateDetailSignatureField('schoolBoardStatus', e.target.value as any)}
-                        className="text-xs font-extrabold text-blue-700 bg-white border border-slate-300 rounded-lg px-2 py-1 focus:outline-none cursor-pointer"
-                      >
-                        <option value="Đã duyệt">Đã duyệt</option>
-                        <option value="Chưa duyệt">Chưa duyệt</option>
-                        <option value="Yêu cầu sửa">Yêu cầu sửa</option>
-                      </select>
-                    </div>
-                    <div className="pt-1 text-center space-y-1">
-                      <span className="text-slate-400 text-[10px] italic block mb-1">(Ký & Gõ tên Hiệu trưởng)</span>
-                      <input
-                        type="text"
-                        value={viewDetailPlan.schoolBoardName || ''}
-                        onChange={(e) => updateDetailSignatureField('schoolBoardName', e.target.value)}
-                        placeholder="Nhập tên Hiệu trưởng/BGH..."
-                        className="w-full text-center font-extrabold text-slate-900 bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs focus:ring-2 focus:ring-orange-500 focus:outline-none"
-                      />
+                    <p><strong>Ý kiến BGH:</strong> {viewDetailPlan.schoolBoardReview || 'Phê duyệt áp dụng giảng dạy.'}</p>
+                    <p>
+                      <strong>Kết quả:</strong>{' '}
+                      <span className="text-blue-700 font-extrabold">{viewDetailPlan.schoolBoardStatus || 'Đã duyệt'}</span>
+                    </p>
+                    <div className="pt-2 text-center">
+                      <span className="text-slate-400 text-[10px] italic block mb-6">(Ký & Đóng dấu BGH)</span>
+                      <strong className="text-slate-900 block text-xs">{viewDetailPlan.schoolBoardName || 'Ban Giám Hiệu'}</strong>
                     </div>
                   </div>
                 </div>

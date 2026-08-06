@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <script type="module" src="/@vite/client"></script>
-
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Lesson Plans - Anh Sao Khue (0346513056) - Chuẩn Bộ GD&ĐT CV 5512</title>
@@ -61,7 +59,7 @@
       }
     }
   </style>
-<script src="/_aistudio-iframe.js?v=2f1c016a"></script></head>
+</head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col">
 
   <!-- MARQUEE HEADER BANNER -->
@@ -112,13 +110,9 @@
       </div>
 
       <div class="flex items-center gap-2">
-        <button type="button" onclick="toggleDownloadModal(true)" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 px-3.5 py-1.5 rounded-xl font-black text-xs flex items-center gap-1.5 shadow-lg transition cursor-pointer transform active:scale-95">
-          <i data-lucide="download" class="w-4 h-4"></i>
-          <span>TẢI VỀ MÁY TÍNH</span>
-        </button>
-        <a href="tel:0346513056" class="bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 px-3 py-1.5 rounded-xl font-black text-xs flex items-center gap-1 shadow transition">
+        <a href="tel:0346513056" class="bg-amber-400 hover:bg-amber-300 text-slate-950 px-3 py-1.5 rounded-xl font-black text-xs flex items-center gap-1 shadow transition">
           <i data-lucide="phone" class="w-4 h-4"></i>
-          <span class="hidden sm:inline">0346513056</span>
+          <span>0346513056</span>
         </a>
       </div>
     </div>
@@ -316,104 +310,6 @@
       <p class="text-[11px] text-slate-500">Định hướng Bộ Giáo dục & Đào tạo GDPT 2018 (Công văn 5512) | Bộ sách Kết Nối Tri Thức & Global Success 2026-2027</p>
     </div>
   </footer>
-
-  <!-- DOWNLOAD MODAL DIALOG -->
-  <div id="downloadModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md hidden">
-    <div class="bg-slate-900 border-2 border-amber-400/60 rounded-2xl max-w-2xl w-full p-6 space-y-5 shadow-2xl relative text-slate-100 max-h-[90vh] overflow-y-auto">
-      <button onclick="toggleDownloadModal(false)" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-xl transition cursor-pointer">
-        <i data-lucide="x" class="w-5 h-5"></i>
-      </button>
-
-      <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center text-slate-950 font-black shadow-lg">
-          <i data-lucide="download" class="w-6 h-6"></i>
-        </div>
-        <div>
-          <h2 class="text-lg font-black text-amber-400 uppercase tracking-wide">TẢI MÃ NGUỒN VỀ MÁY TÍNH</h2>
-          <p class="text-xs text-slate-300">Tác giả: <strong class="text-amber-300">Anh Sao Khue – 0346513056</strong></p>
-        </div>
-      </div>
-
-      <div class="space-y-3">
-        <h3 class="text-xs font-black uppercase text-cyan-300 tracking-wider flex items-center gap-1.5">
-          <i data-lucide="file-code" class="w-4 h-4 text-cyan-400"></i>
-          <span>1. Tải về các file nguồn trực tiếp (1 Click):</span>
-        </h3>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <!-- index.html -->
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 hover:border-amber-400/60 transition space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-amber-300 flex items-center gap-1.5">
-                <i data-lucide="file-code" class="w-4 h-4 text-amber-400"></i> index.html (File Đơn)
-              </span>
-              <span class="text-[10px] bg-amber-400/20 text-amber-300 font-bold px-2 py-0.5 rounded border border-amber-400/40">Standalone</span>
-            </div>
-            <p class="text-[11px] text-slate-400">Chạy trực tiếp trên trình duyệt không cần máy chủ.</p>
-            <button onclick="downloadCurrentPage()" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow transition cursor-pointer">
-              <i data-lucide="download" class="w-4 h-4"></i> Tải index.html
-            </button>
-          </div>
-
-          <!-- Full Zip -->
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 hover:border-cyan-400/60 transition space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-cyan-300 flex items-center gap-1.5">
-                <i data-lucide="archive" class="w-4 h-4 text-cyan-400"></i> Nguồn Dự Án (.zip)
-              </span>
-              <span class="text-[10px] bg-cyan-400/20 text-cyan-300 font-bold px-2 py-0.5 rounded border border-cyan-400/40">Full Project</span>
-            </div>
-            <p class="text-[11px] text-slate-400">Trọn bộ source code React + TypeScript + Backend.</p>
-            <button onclick="downloadFileDirect('ai_lesson_plans_anh_sao_khue.zip', '/ai_lesson_plans_anh_sao_khue.zip')" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-black py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow transition cursor-pointer">
-              <i data-lucide="archive" class="w-4 h-4"></i> Tải File Zip
-            </button>
-          </div>
-
-          <!-- Code.gs -->
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 hover:border-emerald-400/60 transition space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
-                <i data-lucide="file-code" class="w-4 h-4 text-emerald-400"></i> Code.gs (Google Script)
-              </span>
-            </div>
-            <p class="text-[11px] text-slate-400">Backend kết nối Google Docs/Drive & Gemini AI.</p>
-            <button onclick="downloadFileDirect('Code.gs', '/deploy/Code.gs')" class="w-full bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-slate-700 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow transition cursor-pointer">
-              <i data-lucide="download" class="w-4 h-4"></i> Tải Code.gs
-            </button>
-          </div>
-
-          <!-- System Prompt -->
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 hover:border-purple-400/60 transition space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-purple-300 flex items-center gap-1.5">
-                <i data-lucide="file-text" class="w-4 h-4 text-purple-400"></i> System Prompt AI
-              </span>
-            </div>
-            <p class="text-[11px] text-slate-400">Prompt chuẩn Bộ GD&ĐT Công văn 5512.</p>
-            <button onclick="downloadFileDirect('System_Prompt_LessonPlan_GDPT2018.txt', '/deploy/System_Prompt_LessonPlan_GDPT2018.txt')" class="w-full bg-slate-800 hover:bg-slate-700 text-purple-300 border border-slate-700 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow transition cursor-pointer">
-              <i data-lucide="download" class="w-4 h-4"></i> Tải System Prompt
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-slate-950 p-4 rounded-xl border border-cyan-500/30 space-y-2 text-xs">
-        <h3 class="font-extrabold text-amber-400 text-xs uppercase flex items-center gap-1.5">
-          <i data-lucide="check-circle-2" class="w-4 h-4 text-amber-400"></i>
-          <span>2. Hướng Dẫn Tải Từ Menu Giao Diện Google AI Studio:</span>
-        </h3>
-        <ol class="list-decimal list-inside space-y-1 text-slate-300 leading-relaxed text-[11px]">
-          <li>Nhìn lên góc trên bên phải giao diện <strong>Google AI Studio</strong> (hoặc biểu tượng Menu góc trên).</li>
-          <li>Bấm vào biểu tượng ⚙️ <strong>Settings / Export</strong> hoặc <strong>Share / Export Project</strong>.</li>
-          <li>Chọn <strong>"Export to ZIP"</strong> hoặc <strong>"Export to GitHub"</strong> để lưu dự án về máy tính.</li>
-        </ol>
-      </div>
-
-      <div class="text-center text-[11px] text-slate-400 pt-2 border-t border-slate-800">
-        Liên hệ hỗ trợ/Zalo: <strong class="text-amber-400">0346513056 (Anh Sao Khue)</strong>
-      </div>
-    </div>
-  </div>
 
   <!-- TOAST NOTIFICATION CONTAINER -->
   <div id="toast" class="fixed bottom-5 right-5 z-50 bg-amber-400 text-slate-950 font-black px-4 py-3 rounded-xl shadow-2xl text-xs flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
@@ -772,51 +668,6 @@
           <p class="text-[10px] text-slate-500">Ngày tạo: ${item.date}</p>
         </div>
       `).join('');
-    }
-
-    // Download Modal Toggle
-    function toggleDownloadModal(show) {
-      const modal = document.getElementById('downloadModal');
-      if (show) {
-        modal.classList.remove('hidden');
-      } else {
-        modal.classList.add('hidden');
-      }
-    }
-
-    // Download current index.html standalone page
-    function downloadCurrentPage() {
-      const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'index.html';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      showToast("Đã tải xuống file index.html về máy!");
-    }
-
-    // Download direct file from server
-    function downloadFileDirect(filename, relativeUrl) {
-      fetch(relativeUrl)
-        .then(res => res.blob())
-        .then(blob => {
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = filename;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-          showToast(`Đã tải xuống ${filename}!`);
-        })
-        .catch(() => {
-          window.open(relativeUrl, '_blank');
-        });
     }
 
     // Show Toast Notification
